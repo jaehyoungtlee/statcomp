@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Tim",
            family = "Lee",
            role = c("aut", "cre"),
-           email = "jlee736@jhu.edu"
+           email = "jlee736@jhu.edu")
 Description: This package computes the exponential of a number using the Tayler series expansion and the confidence interval.
 Imports: tidyverse
 License: MIT + file LICENSE
