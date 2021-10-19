@@ -5,7 +5,7 @@
 #' @param conf numeric, alpha
 #'
 #' @return confidence interval
-#' @import
+#' @import stats
 #' @export
 #'
 #' @examples
@@ -18,6 +18,6 @@ calculate_CI <- function(x, conf = 0.95) {
         alpha <- 1 - conf
         degrees_freedom <- N - 1
         t_score <- qt(p = alpha/2, df = degrees_freedom, lower.tail = FALSE)
-        se <- sd(x)/sqrt(N)
+        se <- sample_sd(x)/sqrt(N)
         return(c((sample_mean(x) - t_score * se), (sample_mean(x) + t_score * se)))
 }
