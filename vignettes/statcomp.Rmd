@@ -1,0 +1,107 @@
+---
+title: "statcomp"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{statcomp}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+pacman::p_load(statcomp,
+               tidyverse,
+               here,
+               tidytuesdayR,
+               ggplot2)
+```
+
+## Exp(x,k)
+This function approximates the exp(x) function from base R as _k_ increases.
+
+```{r}
+# Taylor series expansion
+Exp(5, k = 1)
+Exp(5, k = 10)
+Exp(5, k = 100)
+
+# compared to 
+exp(5)
+```
+
+## calculate_CI()
+We will demonstrate how to using this function to create a confidence interval using a Chopped TV show dataset from TidyTuesday. 
+
+```{r, include = FALSE}
+# tests if a directory named "data" exists locally
+if(!dir.exists(here("data"))) { dir.create(here("data")) }
+
+# saves data only once (not each time you knit a R Markdown)
+if(!file.exists(here("data","chopped.RDS"))) {
+  url_tsv <- 'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-25/chopped.tsv'
+  chopped <- readr::read_tsv(url_tsv)
+  
+  # save the file to RDS objects
+  saveRDS(chopped, file= here("data","chopped.RDS"))
+}
+```
+
+1. Data cleaning: read the data and clean, searching for episodes that specifically mention Halloween.
+```{r}
+chopped <- readRDS(here("data", "chopped.RDS")) # read in .RDS dataset
+
+chopped_clean <- as_tibble(chopped) %>%                 # convert to tibble
+        drop_na(c(episode_notes, episode_rating)) %>%   # remove NA
+        select(c(episode_notes, episode_rating)) %>%    # select columns
+        mutate(has_halloween_theme =
+                       grepl("halloween", 
+                             episode_notes,
+                             ignore.case = TRUE))       # add column has_halloween_theme
+
+```
+
+2. Boxplots of distribution of ratings
+```{r}
+chopped_clean$has_halloween_theme <- chopped_clean$has_halloween_theme %>% 
+        factor(levels = c("FALSE", "TRUE"), 
+               labels = c("Normal", "Halloween"))
+
+chopped_clean %>% 
+        ggplot() +
+        geom_boxplot(aes(y = episode_rating, x = has_halloween_theme)) +
+        geom_jitter(aes(y = episode_rating, x = has_halloween_theme), 
+                    width = 0.05,
+                    alpha = 0.5) +
+        theme_minimal() +
+        labs(title = "Chopped: episode ratings by theme",
+             caption = "Data source: tidytuesdayR",
+             y = "Rating",
+             x = "Episode theme")
+```
+
+3. Calculate 90% confidence interval
+```{r}
+not_halloween <- chopped_clean %>% 
+        dplyr::filter(has_halloween_theme == "Normal") %>%      # filter regular episodes
+        select("episode_rating") %>%                            # select episode_rating
+        make_p3_class() %>%                                     # make p3_class
+        calculate_CI.p3_class()                                 # calculate CI
+
+halloween <- chopped_clean %>% 
+        dplyr::filter(has_halloween_theme == "Halloween") %>% 
+        select("episode_rating") %>% 
+        make_p3_class() %>% 
+        calculate_CI.p3_class()
+
+not_halloween
+halloween
+
+```
+
+Based on the boxplot and confidence intervals, Halloween-themed Chopped episodes were about as popular as regular episodes. The median rating is around 8.5 for both but Halloween-theme episodes were more skewed.
