@@ -6,6 +6,8 @@
 #' @export
 #'
 #' @examples
+#' set.seed(4)
+#' x <- rnorm(1:10)
 #' class(x) <- "p3_class"
 #' print.p3_class(x)
 

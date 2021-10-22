@@ -90,14 +90,16 @@ chopped_clean %>%
 not_halloween <- chopped_clean %>% 
         dplyr::filter(has_halloween_theme == "Normal") %>%      # filter regular episodes
         select("episode_rating") %>%                            # select episode_rating
+        deframe() %>%                                           # make into double
         make_p3_class() %>%                                     # make p3_class
-        calculate_CI.p3_class()                                 # calculate CI
+        calculate_CI.p3_class(conf = 0.9)                       # calculate CI
 
 halloween <- chopped_clean %>% 
         dplyr::filter(has_halloween_theme == "Halloween") %>% 
         select("episode_rating") %>% 
+        deframe() %>% 
         make_p3_class() %>% 
-        calculate_CI.p3_class()
+        calculate_CI.p3_class(conf = 0.9)
 
 not_halloween
 halloween

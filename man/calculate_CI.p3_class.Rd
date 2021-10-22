@@ -23,7 +23,7 @@ Takes as input a list of length N and alpha and calculates a confidence interval
 \examples{
 set.seed(4)
 x <- rnorm(1:10)
-x <- as_list(x)
+x <- make_p3_class(x)
 calculate_CI.p3_class(x, 0.9)
 
 }

@@ -7,7 +7,8 @@ Authors@R:
            role = c("aut", "cre"),
            email = "jlee736@jhu.edu")
 Description: This package computes the exponential of a number using the Tayler series expansion and the confidence interval.
-Imports: tidyverse
+Imports: 
+    dplyr
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -21,6 +22,5 @@ Suggests:
     here,
     tidytuesdayR,
     ggplot2,
-    purr,
     tibble
 VignetteBuilder: knitr

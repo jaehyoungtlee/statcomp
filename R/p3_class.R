@@ -4,8 +4,7 @@
 #' @param x numeric vector of length N
 #'
 #' @return nothing, unless print function called
-#' @import tidyverse
-#' @import tibble
+#' @import dplyr
 #' @export
 #'
 #' @examples
@@ -15,8 +14,8 @@
 #' print(x)
 
 make_p3_class <- function(x){
-        stopifnot(is_tibble(x))
         x <- list(obj = x)
         structure(x, class = "p3_class")
 }
+
 

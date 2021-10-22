@@ -1,9 +1,5 @@
 sample_mean <- function(x) {
         # stopifnot(is.vector(x) & is.numeric(x)) # x must be a numeric vector
-        if(is_list(x)){
-                N <- nrow(x)}
-        else{
-                N <- length(x)
-        }
+        N <- length(x)
         return(1/N * sum(x))
 }
